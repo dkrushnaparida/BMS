@@ -1,2 +1,10 @@
 fastapi
 uvicorn
+
+# Database
+sqlalchemy[asyncio]
+asyncpg
+
+# Environment
+python-dotenv
+pydantic-settings
