@@ -42,3 +42,13 @@ async def delete_book(
 ):
     service = BookService(session)
     await service.delete_book(book_id)
+
+
+@router.get("/{book_id}/summary")
+async def get_book_summary(
+    book_id: int,
+    session: AsyncSession = Depends(get_db),
+):
+    service = BookService(session)
+    summary = await service.generate_summary_for_book(book_id)
+    return {"summary": summary}

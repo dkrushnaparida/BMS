@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.book import Book
 from app.repositories.book_repository import BookRepository
+from app.ai.summary_service import SummaryService
 
 
 class BookService:
@@ -24,3 +25,17 @@ class BookService:
     async def delete_book(self, book_id: int) -> None:
         book = await self.get_book(book_id)
         await self.book_repo.delete(book)
+
+    async def generate_summary_for_book(self, book_id: int) -> str:
+        book = await self.get_book(book_id)
+
+        ai = SummaryService()
+        summary = await ai.generate_book_summary(
+            title=book.title,
+            author=book.author,
+            description=book.summary,
+        )
+
+        book.summary = summary
+        await self.book_repo.session.commit()
+        return summary

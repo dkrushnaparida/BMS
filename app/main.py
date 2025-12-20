@@ -3,6 +3,7 @@ from sqlalchemy import text
 from app.config.database import engine
 from app.models.base import Base
 from app.api.routes import auth, books, reviews
+from app.api.routes import ai
 
 
 app = FastAPI(title="Book Management System")
@@ -23,3 +24,4 @@ async def health_check():
 app.include_router(auth.router)
 app.include_router(books.router)
 app.include_router(reviews.router)
+app.include_router(ai.router)
