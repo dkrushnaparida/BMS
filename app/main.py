@@ -20,7 +20,7 @@ app = FastAPI(title="Book Management System")
 @app.on_event("startup")
 async def startup():
     if os.getenv("ENV") == "test":
-        return  # 🚨 DO NOT touch DB during tests
+        return  # DO NOT touch DB during tests
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)

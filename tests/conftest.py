@@ -11,7 +11,7 @@ from sqlalchemy.pool import NullPool
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://postgres:Dwiti%401995@localhost:5432/bms_test_db",
+    "postgresql+asyncpg://postgres:password@localhost:5432/bms_test_db",
 )
 
 engine_test = create_async_engine(

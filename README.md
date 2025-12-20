@@ -1,20 +1,54 @@
 # Intelligent Book Management System (BMS)
 
-## Overview
+Async Book Management System built using **FastAPI**, **PostgreSQL**, **JWT authentication**, and **local AI integration (Ollama – Llama 3.2)**.
 
-An async, modular, and AI-powered Book Management System built using FastAPI,
-PostgreSQL, and a locally running Llama 3.2 model.
+This file contains **all instructions** required to set up, run, test, and verify the project.
 
-## Tech Stack
+---
 
-- Python
-- FastAPI (Async)
+## Prerequisites
+
+- Python 3.10+
 - PostgreSQL
-- SQLAlchemy (async)
-- JWT Authentication
-- Ollama (Llama 3.2)
-- pytest
+- pgAdmin 4
+- Ollama
+- Git
 
-## Project Status
+---
 
-Under active development (step-by-step incremental build)
+## Setup & Run Instructions
+
+### Create & Activate Virtual Environment
+
+Install Dependencies
+pip install -r requirements.txt
+
+Create two PostgreSQL databases:
+bms_db (development)
+bms_test_db (testing)
+
+Create a .env file in project root
+DATABASE_URL=postgresql+asyncpg://postgres:<PASSWORD>@localhost:5432/bms_db
+SECRET_KEY=<secure_random_key>
+ENV=dev
+
+Run Application
+uvicorn app.main:app --reload
+
+API Testing Order (Swagger)
+GET /health
+POST /auth/register
+POST /auth/login
+Click Authorize → paste JWT token only
+POST /books
+GET /books
+GET /books/{id}
+POST /books/{id}/reviews
+GET /books/{id}/reviews
+POST /generate-summary
+GET /books/{id}/summary
+DELETE /books/{id}
+
+```
+
+```
