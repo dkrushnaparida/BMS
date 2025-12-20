@@ -1,10 +1,11 @@
 from fastapi import FastAPI
 from sqlalchemy import text
-
 from app.config.database import engine
 from app.models.base import Base
+from app.api.routes import auth, books, reviews
 
-app = FastAPI(title="Book Management System", version="1.0.0")
+
+app = FastAPI(title="Book Management System")
 
 
 @app.on_event("startup")
@@ -17,3 +18,8 @@ async def startup():
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
+
+
+app.include_router(auth.router)
+app.include_router(books.router)
+app.include_router(reviews.router)
