@@ -8,3 +8,8 @@ asyncpg
 # Environment
 python-dotenv
 pydantic-settings
+
+
+# Authentication
+passlib[bcrypt]
+python-jose[cryptography]
