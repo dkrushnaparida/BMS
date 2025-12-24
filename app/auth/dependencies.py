@@ -27,6 +27,21 @@ async def get_current_user(
     user = await repo.get_by_id(user_id)
 
     if not user:
-        raise HTTPException(status_code=401, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+        )
 
     return user
+
+
+def require_role(required_role: str):
+    async def role_checker(user=Depends(get_current_user)):
+        if user.role != required_role:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient permissions",
+            )
+        return user
+
+    return role_checker

@@ -4,16 +4,19 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.config.database import get_db
 from app.schemas.book import BookCreate, BookRead
 from app.services.book_service import BookService
-from app.auth.dependencies import get_current_user
+from app.auth.dependencies import get_current_user, require_role
 
 router = APIRouter(prefix="/books", tags=["Books"])
 
 
-@router.post("", response_model=BookRead)
+@router.post(
+    "",
+    response_model=BookRead,
+    dependencies=[Depends(require_role("admin"))],
+)
 async def create_book(
     book: BookCreate,
     session: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user),
 ):
     service = BookService(session)
     return await service.create_book(book.model_dump())
@@ -34,17 +37,23 @@ async def get_book(book_id: int, session: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail=str(e))
 
 
-@router.delete("/{book_id}", status_code=204)
+@router.delete(
+    "/{book_id}",
+    status_code=204,
+    dependencies=[Depends(require_role("admin"))],
+)
 async def delete_book(
     book_id: int,
     session: AsyncSession = Depends(get_db),
-    user=Depends(get_current_user),
 ):
     service = BookService(session)
     await service.delete_book(book_id)
 
 
-@router.get("/{book_id}/summary")
+@router.get(
+    "/{book_id}/summary",
+    dependencies=[Depends(get_current_user)],
+)
 async def get_book_summary(
     book_id: int,
     session: AsyncSession = Depends(get_db),
