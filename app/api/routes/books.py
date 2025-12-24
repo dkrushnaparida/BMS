@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config.database import get_db
 from app.schemas.book import BookCreate, BookRead
+from app.schemas.ai import BookSummaryResponse
 from app.services.book_service import BookService
 from app.auth.dependencies import get_current_user, require_role
 
@@ -12,6 +13,7 @@ router = APIRouter(prefix="/books", tags=["Books"])
 @router.post(
     "",
     response_model=BookRead,
+    status_code=201,
     dependencies=[Depends(require_role("admin"))],
 )
 async def create_book(
@@ -52,6 +54,7 @@ async def delete_book(
 
 @router.get(
     "/{book_id}/summary",
+    response_model=BookSummaryResponse,
     dependencies=[Depends(get_current_user)],
 )
 async def get_book_summary(

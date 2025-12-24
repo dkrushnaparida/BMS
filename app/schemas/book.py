@@ -1,20 +1,20 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 
 class BookCreate(BaseModel):
-    title: str
-    author: str
-    genre: Optional[str] = None
-    year_published: Optional[int] = None
+    title: str = Field(..., min_length=1, max_length=255)
+    author: str = Field(..., min_length=1, max_length=255)
+    genre: Optional[str] = Field(None, max_length=100)
+    year_published: Optional[int] = Field(None, ge=0)
     summary: Optional[str] = None
 
 
 class BookUpdate(BaseModel):
-    title: Optional[str] = None
-    author: Optional[str] = None
-    genre: Optional[str] = None
-    year_published: Optional[int] = None
+    title: Optional[str] = Field(None, min_length=1, max_length=255)
+    author: Optional[str] = Field(None, min_length=1, max_length=255)
+    genre: Optional[str] = Field(None, max_length=100)
+    year_published: Optional[int] = Field(None, ge=0)
     summary: Optional[str] = None
 
 
