@@ -2,8 +2,11 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str
-    secret_key: str
+    DATABASE_URL: str
+    JWT_SECRET_KEY: str
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    AI_MODEL_NAME: str = "llama3.2:1b"
 
     class Config:
         env_file = ".env"
