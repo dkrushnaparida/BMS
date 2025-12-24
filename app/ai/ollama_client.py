@@ -1,6 +1,7 @@
 import asyncio
 from langchain_ollama import ChatOllama
 from app.config.settings import settings
+from app.schemas.ai import SummaryResponse
 
 
 class OllamaClient:
@@ -8,19 +9,19 @@ class OllamaClient:
         self.llm = ChatOllama(
             model=settings.AI_MODEL_NAME,
             temperature=0.3,
+            num_predict=300,
         )
 
     def _generate_sync(self, prompt: str) -> str:
         response = self.llm.invoke(prompt)
         return response.content
 
-    async def generate(self, prompt: str, timeout: int = 30) -> str:
+    async def generate(self, prompt: str, timeout: int = 30) -> SummaryResponse:
         try:
-            return await asyncio.wait_for(
+            text = await asyncio.wait_for(
                 asyncio.to_thread(self._generate_sync, prompt),
                 timeout=timeout,
             )
+            return SummaryResponse(summary=text)
         except asyncio.TimeoutError:
-            raise RuntimeError("AI model timed out while generating summary")
-        except Exception as exc:
-            raise RuntimeError(f"AI generation failed: {exc}")
+            raise RuntimeError("AI generation timed out")
