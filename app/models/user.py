@@ -1,15 +1,18 @@
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 from app.models.base import Base
 
 
 class User(Base):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    email: Mapped[str] = mapped_column(
-        String(255), unique=True, index=True, nullable=False
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String(255), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    role = Column(String(50), nullable=False, default="user")
+
+    reviews = relationship(
+        "Review",
+        back_populates="user",
+        cascade="all, delete-orphan",
     )
-    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
-    role: Mapped[str] = mapped_column(String(50), nullable=False)

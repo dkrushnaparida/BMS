@@ -1,25 +1,26 @@
-from sqlalchemy import ForeignKey, Integer, Text
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy import Column, Integer, Text, ForeignKey
+from sqlalchemy.orm import relationship
 from app.models.base import Base
 
 
 class Review(Base):
     __tablename__ = "reviews"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-
-    book_id: Mapped[int] = mapped_column(
+    id = Column(Integer, primary_key=True, index=True)
+    book_id = Column(
+        Integer,
         ForeignKey("books.id", ondelete="CASCADE"),
-        nullable=False,
         index=True,
+        nullable=False,
     )
-
-    user_id: Mapped[int] = mapped_column(
+    user_id = Column(
+        Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False,
         index=True,
+        nullable=False,
     )
+    review_text = Column(Text, nullable=False)
+    rating = Column(Integer, nullable=False)
 
-    review_text: Mapped[str] = mapped_column(Text, nullable=False)
-    rating: Mapped[int] = mapped_column(Integer, nullable=False)
+    book = relationship("Book", back_populates="reviews")
+    user = relationship("User", back_populates="reviews")
