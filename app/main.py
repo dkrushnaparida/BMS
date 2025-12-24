@@ -2,28 +2,26 @@ from fastapi import FastAPI
 from sqlalchemy import text
 from app.config.database import engine
 from app.models.base import Base
-from app.api.routes import auth, books, reviews
-from app.api.routes import ai
+from app.api.routes import auth, books, reviews, ai
+from app.config.settings import settings
 import os
 
 
 app = FastAPI(title="Book Management System")
 
 
-# @app.on_event("startup")
-# async def startup():
-#     async with engine.begin() as conn:
-#         await conn.run_sync(Base.metadata.create_all)
-#         await conn.execute(text("SELECT 1"))
-
-
 @app.on_event("startup")
 async def startup():
+    _ = settings.DATABASE_URL
+    _ = settings.JWT_SECRET_KEY
+    _ = settings.AI_MODEL_NAME
+
     if os.getenv("ENV") == "test":
-        return  # DO NOT touch DB during tests
+        return
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await conn.execute(text("SELECT 1"))
 
 
 @app.get("/health")

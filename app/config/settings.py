@@ -12,5 +12,12 @@ class Settings(BaseSettings):
         env_file = ".env"
         extra = "forbid"  # declare secret_key explicitly in Settings
 
+    @field_validator("JWT_SECRET_KEY")
+    @classmethod
+    def validate_jwt_secret(cls, v: str) -> str:
+        if v.lower() in {"change_me", "changeme", "secret"}:
+            raise ValueError("JWT_SECRET_KEY must be changed from default value")
+        return v
+
 
 settings = Settings()
